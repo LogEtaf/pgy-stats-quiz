@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI 時代物理治療 PGY 基礎統計能力測驗</title>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+      background: #f5f7fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0052cc, #3399ff);
+      color: #fff;
+      padding: 24px 16px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.7rem;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 24px auto 40px;
+      padding: 0 16px;
+    }
+
+    .info-card {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .info-card h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: #333;
+    }
+
+    .score-display {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #0052cc;
+    }
+
+    .btn-submit {
+      background: #0052cc;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 22px;
+      font-size: 0.98rem;
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.2s ease;
+      box-shadow: 0 3px 6px rgba(0, 82, 204, 0.4);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-submit:hover {
+      background: #0041a8;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 82, 204, 0.5);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0, 82, 204, 0.4);
+    }
+
+    .quiz-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 900px) {
+      .quiz-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .question-card {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 14px 16px 16px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      border-left: 4px solid transparent;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+    }
+
+    .question-card:hover {
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
+      transform: translateY(-1px);
+    }
+
+    .question-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    .question-text {
+      margin-bottom: 8px;
+      font-size: 0.93rem;
+      color: #222;
+      line-height: 1.5;
+    }
+
+    .options {
+      margin-bottom: 6px;
+    }
+
+    .option-label {
+      display: block;
+      font-size: 0.9rem;
+      margin: 3px 0;
+      cursor: pointer;
+    }
+
+    .option-label input {
+      margin-right: 6px;
+    }
+
+    .explanation {
+      margin-top: 6px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      display: none;
+    }
+
+    .explanation.correct {
+      background: #e6f7e9;
+      color: #237804;
+    }
+
+    .explanation.incorrect {
+      background: #fff1f0;
+      color: #a8071a;
+    }
+
+    .question-card.correct {
+      border-left-color: #52c41a;
+    }
+
+    .question-card.incorrect {
+      border-left-color: #ff4d4f;
+    }
+
+    .summary-text {
+      font-size: 0.9rem;
+      margin-top: 4px;
+      color: #555;
+    }
+
+    .chart-container {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 20px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
+
+    .chart-container h3 {
+      margin-top: 0;
+      font-size: 1rem;
+      color: #333;
+    }
+
+    .small-note {
+      font-size: 0.82rem;
+      color: #777;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>物理治療 PGY 基礎統計能力測驗</h1>
+  <p>請完成 10 題單選題，按下「送出 / 結算分數」後，系統會顯示得分、每題解析與答對 / 答錯長條圖。</p>
+</header>
+
+<div class="container">
+  <div class="info-card">
+    <div>
+      <h2>測驗資訊</h2>
+      <p class="summary-text">題數：10 題　｜　題型：單選題　｜　主題：臨床統計基礎概念</p>
+      <p id="scoreText" class="score-display">尚未作答</p>
+    </div>
+    <button id="submitBtn" class="btn-submit">
+      送出 / 結算分數
+    </button>
+  </div>
+
+  <div id="quiz" class="quiz-grid">
+    <!-- 題目將由 JavaScript 動態產生 -->
+  </div>
+
+  <div class="chart-container">
+    <h3>作答結果視覺化</h3>
+    <canvas id="resultChart" height="120"></canvas>
+    <p class="small-note">※ 長條圖會在送出後更新，顯示本次作答的「答對題數」與「答錯題數」。</p>
+  </div>
+</div>
+
+<script>
+  // 題庫資料結構
+  const questions = [
+    {
+      id: 1,
+      title: "第 1 題（變項型態認定）",
+      text: "某中風 PAC 研究收集下列資料：1. 性別（男／女） 2. 年齡（歲） 3. Barthel Index（0–100 分，整數） 4. 是否使用尿管（是／否） 5. PAC 完成與否（完成／中斷）。下列配對何者正確？",
+      options: [
+        "A. 性別：連續變項",
+        "B. 年齡：類別變項",
+        "C. BI：連續變項",
+        "D. 是否使用尿管：連續變項"
+      ],
+      correctIndex: 2,
+      explanation: "BI（Barthel Index）是 0–100 分的量表，屬於連續型（至少可視為近似連續），選項 C 正確。性別與是否使用尿管都是類別變項，年齡則是連續變項。"
+    },
+    {
+      id: 2,
+      title: "第 2 題（集中趨勢指標）",
+      text: "某批中風病人出院後 3 個月 FIM 分數分布明顯右偏（多數集中在高分，少數非常低分）。若想描述「典型病人」的功能表現，下列哪一個統計量較合適？",
+      options: [
+        "A. 平均數（mean）",
+        "B. 中位數（median）",
+        "C. 眾數（mode）",
+        "D. 標準差（standard deviation）"
+      ],
+      correctIndex: 1,
+      explanation: "分布明顯偏態時，中位數較不受極端值影響，比平均數更能代表「典型」個案，因此 B 正確。"
+    },
+    {
+      id: 3,
+      title: "第 3 題（標準差概念）",
+      text: "住院中風病人的住院天數，兩個病房的平均數皆為 20 天：病房 A：平均 20 天，標準差 3 天；病房 B：平均 20 天，標準差 10 天。就「住院天數變異程度」的解讀，下列何者正確？",
+      options: [
+        "A. 兩病房住院天數變異程度差不多",
+        "B. 病房 A 住院天數較固定，病房 B 差異較大",
+        "C. 病房 B 住院天數較固定，病房 A 差異較大",
+        "D. 無法比較"
+      ],
+      correctIndex: 1,
+      explanation: "標準差愈大代表資料離平均值愈分散。病房 B 的 SD = 10 天 > 病房 A 的 3 天，表示 B 的住院天數差異較大，A 較固定。"
+    },
+    {
+      id: 4,
+      title: "第 4 題（p 值意義）",
+      text: "某研究比較「有使用踝足矯具」與「未使用」病人 3 個月步態速度，t 檢定得到 p = 0.03。較正確的解讀是：",
+      options: [
+        "A. 兩組完全沒有差異",
+        "B. 兩組一定有臨床上重要差異",
+        "C. 在統計上，以顯著水準 0.05 判定，兩組平均步態速度有顯著差異",
+        "D. 模型完全正確、沒有任何偏差"
+      ],
+      correctIndex: 2,
+      explanation: "p = 0.03 < 0.05，在統計上可說兩組平均步態速度有顯著差異，但不代表一定有臨床上重要差異，也不能保證模型完全正確。"
+    },
+    {
+      id: 5,
+      title: "第 5 題（檢定選擇：兩組比較）",
+      text: "你想比較「居家復健組」與「門診復健組」中風病人，在 12 週後的 6 分鐘步行距離（6MWD，公尺，連續型）是否不同，各組樣本數約 40 人，數據近似常態分布。最適合的統計方法為：",
+      options: [
+        "A. 配對 t 檢定（paired t-test）",
+        "B. 獨立樣本 t 檢定（independent t-test）",
+        "C. 卡方檢定（chi-square test）",
+        "D. 皮爾森相關（Pearson correlation）"
+      ],
+      correctIndex: 1,
+      explanation: "兩組為不同個體（居家組 vs 門診組），比較連續變項的平均數，且近似常態，最合適為獨立樣本 t 檢定。"
+    },
+    {
+      id: 6,
+      title: "第 6 題（檢定選擇：前後比較）",
+      text: "你想評估某平衡訓練計畫是否能改善中風病人的 Berg 平衡量表分數，同一批病人接受訓練前與 8 週後皆測量 Berg 分數。比較前後差異時，最合適的統計方法為：",
+      options: [
+        "A. 配對 t 檢定（paired t-test）",
+        "B. 獨立樣本 t 檢定（independent t-test）",
+        "C. 卡方檢定（chi-square test）",
+        "D. 單純看差異是否 > 0，不需統計檢定"
+      ],
+      correctIndex: 0,
+      explanation: "同一批個案的前後分數，屬於成對資料，比較平均差異應使用配對 t 檢定（若常態假設合理）。"
+    },
+    {
+      id: 7,
+      title: "第 7 題（相關 vs 因果）",
+      text: "某研究發現，住院中風病人的「早期復健介入小時數」與「出院時 FIM 分數」之間皮爾森相關係數 r = 0.60，p < 0.01。下列哪一種說法最適當？",
+      options: [
+        "A. 證明早期復健一定造成 FIM 進步",
+        "B. 顯示早期復健與 FIM 分數有中度正相關，但不能單憑此結果推論因果關係",
+        "C. 因為 r < 0.7，代表兩者完全沒關係",
+        "D. 只要 p < 0.05 就可以說有因果關係"
+      ],
+      correctIndex: 1,
+      explanation: "r = 0.60 代表中度正相關，但相關研究無法單純證明因果關係，因此最適當的說法是有中度正相關但不能直接推論因果。"
+    },
+    {
+      id: 8,
+      title: "第 8 題（信賴區間）",
+      text: "若某研究報告：「治療組與對照組 BI 平均差異為 8 分，其 95% 信賴區間為 2 到 14 分」，較合適的解讀是：",
+      options: [
+        "A. 有 95% 的病人 BI 會落在 2 到 14 分之間",
+        "B. 我們有 95% 的信心，相信真實的平均差異介於 2 到 14 分",
+        "C. 代表這個研究一定正確 95%",
+        "D. 代表 p 值 = 0.95"
+      ],
+      correctIndex: 1,
+      explanation: "95% 信賴區間指的是：在重複抽樣的觀點下，有約 95% 的信心真實平均差異落在 2 到 14 分，而不是病人個別分數的範圍。"
+    },
+    {
+      id: 9,
+      title: "第 9 題（類別資料分析）",
+      text: "你想比較「有跌倒」與「無跌倒」在「是否使用助行器（是／否）」上的比例差異，樣本數約 100 人。最合適的統計方法是：",
+      options: [
+        "A. t 檢定",
+        "B. 卡方檢定",
+        "C. 線性迴歸",
+        "D. 皮爾森相關"
+      ],
+      correctIndex: 1,
+      explanation: "跌倒（有／無）與助行器使用（是／否）皆為類別變項，兩個類別變項比例差異通常使用卡方檢定（或在樣本數很小時用 Fisher 精確檢定）。"
+    },
+    {
+      id: 10,
+      title: "第 10 題（概念整合：研究設計與分析配對）",
+      text: "某 PGY 設計一個小型研究：「針對住院中風病人，導入一套新式步態訓練方案，比較導入前後 4 週的步態速度與跌倒發生率。」收集指標包括步態速度（m/s，連續）與跌倒是否發生（是／否）。下列分析配對何者較合理？",
+      options: [
+        "A. 步態速度 → 獨立樣本 t 檢定；跌倒 → 線性迴歸",
+        "B. 步態速度 → 配對 t 檢定；跌倒 → 前後比例以卡方檢定或 McNemar 檢定",
+        "C. 步態速度 → 卡方檢定；跌倒 → t 檢定",
+        "D. 兩個指標都不需要統計檢定，只要看平均有沒有變化即可"
+      ],
+      correctIndex: 1,
+      explanation: "同一批病人的前後步態速度屬成對資料，用配對 t 檢定；前後跌倒比例屬類別資料，可用成對比例檢定（如 McNemar）或適當的卡方檢定。"
+    }
+  ];
+
+  const quizContainer = document.getElementById("quiz");
+  const scoreText = document.getElementById("scoreText");
+  const submitBtn = document.getElementById("submitBtn");
+
+  // 動態產生題目
+  function renderQuiz() {
+    questions.forEach((q, index) => {
+      const card = document.createElement("div");
+      card.className = "question-card";
+      card.dataset.index = index;
+
+      const titleEl = document.createElement("div");
+      titleEl.className = "question-title";
+      titleEl.textContent = q.title;
+
+      const textEl = document.createElement("div");
+      textEl.className = "question-text";
+      textEl.textContent = q.text;
+
+      const optionsEl = document.createElement("div");
+      optionsEl.className = "options";
+
+      q.options.forEach((opt, optIndex) => {
+        const label = document.createElement("label");
+        label.className = "option-label";
+
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = "q" + index;
+        input.value = optIndex;
+
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(opt));
+        optionsEl.appendChild(label);
+      });
+
+      const expEl = document.createElement("div");
+      expEl.className = "explanation";
+      expEl.id = "exp-" + index;
+
+      card.appendChild(titleEl);
+      card.appendChild(textEl);
+      card.appendChild(optionsEl);
+      card.appendChild(expEl);
+
+      quizContainer.appendChild(card);
+    });
+  }
+
+  // Chart.js 初始化
+  let resultChart = null;
+  function initChart() {
+    const ctx = document.getElementById("resultChart").getContext("2d");
+    resultChart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: ["答對題數", "答錯題數"],
+        datasets: [{
+          label: "題數",
+          data: [0, 0],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        animation: {
+          duration: 700
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            precision: 0,
+            ticks: {
+              stepSize: 1
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+  }
+
+  // 更新圖表
+  function updateChart(correct, incorrect) {
+    if (!resultChart) return;
+    resultChart.data.datasets[0].data = [correct, incorrect];
+    resultChart.update();
+  }
+
+  // 結算分數與解析
+  function gradeQuiz() {
+    let correctCount = 0;
+    const total = questions.length;
+
+    questions.forEach((q, index) => {
+      const card = document.querySelector(`.question-card[data-index="${index}"]`);
+      const selected = document.querySelector(`input[name="q${index}"]:checked`);
+      const expEl = document.getElementById("exp-" + index);
+
+      card.classList.remove("correct", "incorrect");
+      expEl.classList.remove("correct", "incorrect");
+      expEl.style.display = "block";
+
+      if (!selected) {
+        expEl.textContent = "尚未作答本題。正確答案：" +
+          q.options[q.correctIndex].slice(0, 2) +
+          "。解析：" + q.explanation;
+        expEl.classList.add("incorrect");
+        card.classList.add("incorrect");
+        return;
+      }
+
+      const selectedIndex = parseInt(selected.value, 10);
+      if (selectedIndex === q.correctIndex) {
+        correctCount++;
+        card.classList.add("correct");
+        expEl.classList.add("correct");
+        expEl.textContent = "答對了！" +
+          "正確答案：" + q.options[q.correctIndex].slice(0, 2) +
+          "。解析：" + q.explanation;
+      } else {
+        card.classList.add("incorrect");
+        expEl.classList.add("incorrect");
+        expEl.textContent = "答錯了。你選的是：「" +
+          q.options[selectedIndex].slice(0, 2) +
+          "」，正確答案是：" +
+          q.options[q.correctIndex].slice(0, 2) +
+          "。解析：" + q.explanation;
+      }
+    });
+
+    const incorrectCount = total - correctCount;
+    let levelText = "";
+    if (correctCount === total) {
+      levelText = "統計小高手，可以開始當 AI 的監督者了。";
+    } else if (correctCount >= 7) {
+      levelText = "基礎不錯，再多練幾次臨床案例就更穩。";
+    } else if (correctCount >= 4) {
+      levelText = "概念還需要再鞏固，建議再複習一次變項與檢定對應。";
+    } else {
+      levelText = "可以把這 10 題當作重點複習清單，逐題回顧。";
+    }
+
+    scoreText.textContent = `你的得分：${correctCount} / ${total} 題。${levelText}`;
+    updateChart(correctCount, incorrectCount);
+  }
+
+  // 初始化頁面
+  document.addEventListener("DOMContentLoaded", () => {
+    renderQuiz();
+    initChart();
+    submitBtn.addEventListener("click", gradeQuiz);
+  });
+</script>
+</body>
+</html>
