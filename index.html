@@ -470,12 +470,12 @@
         <h1>AI 時代的 PGY · 自我盤點與統計概念小測驗</h1>
         <p class="hero-subtitle">
           一次完成 20 題作答，盤點自己在「AI 工具、統計基礎、資料分析、期刊閱讀」的現況。
-          送出後自動產生 <strong>六構面雷達圖</strong> 與文字建議，可作為 PGY 教學分組與個別輔導依據。
+          送出後自動產生 <strong>六構面雷達圖</strong>，若同一位 PGY 完成前後測，將疊圖顯示學習變化。
         </p>
         <div class="hero-tags">
           <span class="hero-tag">PGY 起始能力評估</span>
           <span class="hero-tag">AI 應用 x 統計素養</span>
-          <span class="hero-tag">Radar Chart 能力輪廓</span>
+          <span class="hero-tag">Radar Chart 前後測對照</span>
         </div>
         <div class="hero-actions">
           <button class="btn-primary" onclick="scrollToQuiz()">
@@ -489,10 +489,10 @@
       <div class="hero-right">
         <div class="hero-card">
           <p class="hero-card-title">使用方式（建議流程）</p>
-          <p>1. PGY 於課前以手機或電腦線上作答。</p>
-          <p>2. 20 題皆在同一頁呈現，可隨時回頭修改選項。</p>
-          <p>3. 按下「送出 / 產生雷達圖」後，右側會顯示六構面分數與學習建議。</p>
-          <p>4. 教師可依分數高低安排：基礎補強組、實作練習組、進階整合組。</p>
+          <p>1. PGY 於課程「前測」填寫一次；課程結束再填一次「後測」。</p>
+          <p>2. 請務必姓名/代碼一致，系統才能對到前後測。</p>
+          <p>3. 送出後會寫入 Google Sheet，並嘗試讀取另一時點的雷達圖，一併顯示。</p>
+          <p>4. 教師可在 Sheet 端進一步做班級分析與追蹤。</p>
         </div>
       </div>
     </div>
@@ -512,8 +512,15 @@
         <div class="step-body">
           <div class="info-row">
             <div>
-              <div class="field-label">姓名或代碼（選填，用於討論或追蹤）</div>
-              <input id="nameInput" class="name-input" placeholder="例如：PGY-01 或暱稱" />
+              <div class="field-label">姓名或代碼（用於前後測配對）</div>
+              <input id="nameInput" class="name-input" placeholder="例如：PGY-01 或姓名縮寫" />
+            </div>
+            <div>
+              <div class="field-label">本次作答階段</div>
+              <select id="phaseSelect" class="name-input" style="width:auto;padding-right:28px;">
+                <option value="pre">前測（課前）</option>
+                <option value="post">後測（課後）</option>
+              </select>
             </div>
             <span class="badge green">共 20 題 · 四選一 · 皆在本頁完成</span>
           </div>
@@ -524,7 +531,7 @@
 
           <div class="actions-row">
             <button class="btn-primary" id="submitBtn">
-              送出 / 產生雷達圖
+              送出 / 寫入 Google Sheet 並產生雷達圖
             </button>
             <button class="btn-ghost" type="button" id="resetBtn">
               清除全部作答
@@ -539,29 +546,31 @@
         <div class="card-header">
           <div class="card-title">
             <span class="pill-icon">R</span>
-            <span>AI x 統計能力雷達圖 · 六構面</span>
+            <span>AI x 統計能力雷達圖 · 六構面（可疊前後測）</span>
           </div>
-          <span class="card-sub">彩色深淺簡約風格 · 0–100 分量尺 · 送出後自動更新</span>
+          <span class="card-sub">藍/綠雙線比較 · 0–100 分量尺 · 送出後自動更新</span>
         </div>
         <div class="step-body">
           <div class="chart-box">
             <h3>你的 AI / 統計能力輪廓</h3>
-            <p>
+            <p id="chartNote">
               構面包含：
               <strong>AI 工具熟悉度、AI 應用與學習、統計工具與資料處理、統計與研究實作、期刊閱讀與批判、統計概念測驗</strong>。
+              若同一代碼有前測與後測，圖上將顯示兩條曲線（藍色：本次；綠色：另一時點）。
             </p>
-            <div class="chart-wrapper">
-              <canvas id="radarChart" height="270"></canvas>
+            <div class="chart-wrapper" style="height:270px;">
+              <canvas id="radarChart"></canvas>
             </div>
           </div>
 
           <div class="score-card" id="scoreCard">
             <div class="score-main" id="scoreMainText">
-              尚未產生結果。請先完成作答並按「送出 / 產生雷達圖」。
+              尚未產生結果。請先完成作答並按「送出 / 寫入 Google Sheet 並產生雷達圖」。
             </div>
             <ul class="feedback-list" id="feedbackList">
               <li>送出後，這裡會顯示各構面的分數（0–100）與下一步學習建議。</li>
               <li>第 11–20 題的解析會出現在各題下方，可做為課堂講解素材。</li>
+              <li>如同一姓名/代碼曾做過前測或後測，系統會嘗試載入另一時點並疊圖顯示。</li>
             </ul>
           </div>
         </div>
@@ -571,15 +580,17 @@
 
   <footer>
     <div class="footer-inner">
-      <span>教學建議：可課前先填寫，課堂上用投影示範一位 PGY 的雷達圖與答題解析，引出討論。</span>
-      <span>技術說明：單一 HTML 檔 · 純前端 Chart.js 雷達圖 · 適配手機與桌機。</span>
+      <span>教學建議：可課前做前測，課後再做後測，在投影幕上展示個別或班級代表的前後測雷達圖，引導反思。</span>
+      <span>技術說明：前端 HTML + Chart.js · 後端為 Apps Script + Google Sheet（可依院內資訊政策調整權限）。</span>
     </div>
   </footer>
 </div>
 
 <script>
+  // ==== 設定：請將此 URL 改成你的 Apps Script Web App URL ====
+  const GOOGLE_SCRIPT_URL="https://script.google.com/macros/s/AKfycbzwCGr5avHNjH0p3APvNBCpCkGq6BoFYKLQj3wM8llgWAco8gYrcQrbXro8mcHBhJJ3/exec";
+
   // ====== 問題資料 ======
-  // 前 10 題：AI / 統計 / 資料分析經驗（Likert A=1 ~ D=4）
   const aiQuestions = [
     {
       id: 1,
@@ -713,7 +724,6 @@
     }
   ];
 
-  // 後 10 題：統計概念測驗（有正確答案）
   const statsQuestions = [
     {
       id: 11,
@@ -869,38 +879,13 @@
 
   const QUESTIONS = [...aiQuestions, ...statsQuestions];
 
-  // ====== 能力構面定義（六軸） ======
   const DIMENSIONS = [
-    {
-      key: "ai_basic",
-      label: "AI 工具熟悉度",
-      questionIds: [1, 2]
-    },
-    {
-      key: "ai_learning",
-      label: "AI 應用與學習投入",
-      questionIds: [3, 9, 10]
-    },
-    {
-      key: "tool_data",
-      label: "統計工具與資料處理",
-      questionIds: [4, 8]
-    },
-    {
-      key: "stats_practice",
-      label: "統計與研究實作經驗",
-      questionIds: [5, 6]
-    },
-    {
-      key: "reading",
-      label: "期刊閱讀與批判",
-      questionIds: [7]
-    },
-    {
-      key: "stats_quiz",
-      label: "統計概念測驗成績",
-      questionIds: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-    }
+    { key: "ai_basic",      label: "AI 工具熟悉度",       questionIds: [1, 2] },
+    { key: "ai_learning",   label: "AI 應用與學習投入",   questionIds: [3, 9, 10] },
+    { key: "tool_data",     label: "統計工具與資料處理", questionIds: [4, 8] },
+    { key: "stats_practice",label: "統計與研究實作經驗", questionIds: [5, 6] },
+    { key: "reading",       label: "期刊閱讀與批判",     questionIds: [7] },
+    { key: "stats_quiz",    label: "統計概念測驗成績",   questionIds: [11,12,13,14,15,16,17,18,19,20] }
   ];
 
   const questionListEl = document.getElementById("questionList");
@@ -908,10 +893,11 @@
   const submitBtn = document.getElementById("submitBtn");
   const resetBtn = document.getElementById("resetBtn");
   const nameInput = document.getElementById("nameInput");
+  const phaseSelect = document.getElementById("phaseSelect");
   const scoreMainText = document.getElementById("scoreMainText");
   const feedbackList = document.getElementById("feedbackList");
 
-  // 將 20 題一次渲染在同一頁
+  // 渲染題目
   function renderAllQuestions() {
     questionListEl.innerHTML = "";
     QUESTIONS.forEach(q => {
@@ -974,7 +960,7 @@
       data: {
         labels: DIMENSIONS.map(d => d.label),
         datasets: [{
-          label: "能力構面（0–100）",
+          label: "本次作答",
           data: [0, 0, 0, 0, 0, 0],
           borderWidth: 2,
           fill: true,
@@ -997,12 +983,8 @@
               backdropColor: "transparent",
               color: "#6b7280"
             },
-            grid: {
-              color: "rgba(209,213,219,0.8)"
-            },
-            angleLines: {
-              color: "rgba(209,213,219,0.8)"
-            },
+            grid: { color: "rgba(209,213,219,0.8)" },
+            angleLines: { color: "rgba(209,213,219,0.8)" },
             pointLabels: {
               font: { size: 10 },
               color: "#374151"
@@ -1010,15 +992,57 @@
           }
         },
         plugins: {
-          legend: { display: false }
+          legend: { display: true }
         }
       }
     });
   }
 
-  function updateRadarChart(scores) {
+  function updateRadarSingle(scores, phaseLabel) {
     if (!radarChart) return;
-    radarChart.data.datasets[0].data = scores;
+    radarChart.data.datasets = [{
+      label: `本次作答（${phaseLabel}）`,
+      data: scores,
+      borderWidth: 2,
+      fill: true,
+      backgroundColor: "rgba(37,99,235,0.18)",
+      borderColor: "rgba(37,99,235,1)",
+      pointBackgroundColor: "rgba(37,99,235,1)",
+      pointBorderColor: "#ffffff",
+      pointRadius: 3
+    }];
+    radarChart.update();
+  }
+
+  function updateRadarWithHistory(currentScores, currentPhase, otherScores, otherPhase) {
+    if (!radarChart) return;
+    const phaseLabelNow = currentPhase === "pre" ? "前測" : "後測";
+    const phaseLabelOther = otherPhase === "pre" ? "前測" : "後測";
+
+    radarChart.data.datasets = [
+      {
+        label: `本次作答（${phaseLabelNow}）`,
+        data: currentScores,
+        borderWidth: 2,
+        fill: true,
+        backgroundColor: "rgba(37,99,235,0.18)",
+        borderColor: "rgba(37,99,235,1)",
+        pointBackgroundColor: "rgba(37,99,235,1)",
+        pointBorderColor: "#ffffff",
+        pointRadius: 3
+      },
+      {
+        label: `歷史資料（${phaseLabelOther}）`,
+        data: otherScores,
+        borderWidth: 2,
+        fill: true,
+        backgroundColor: "rgba(16,185,129,0.12)",
+        borderColor: "rgba(16,185,129,1)",
+        pointBackgroundColor: "rgba(16,185,129,1)",
+        pointBorderColor: "#ffffff",
+        pointRadius: 3
+      }
+    ];
     radarChart.update();
   }
 
@@ -1170,7 +1194,41 @@
     );
   }
 
-  function gradeAndVisualize() {
+  // 將結果送往 Google Sheet
+  async function saveToGoogleSheet(payload) {
+    if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("YOUR_SCRIPT_ID_HERE")) {
+      console.warn("尚未設定 GOOGLE_SCRIPT_URL，略過寫入 Google Sheet。");
+      return;
+    }
+    try {
+      // 使用 no-cors 可避免 CORS 錯誤，但無法讀取回應；以試算表端確認為主
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+    } catch (err) {
+      console.error("寫入 Google Sheet 發生錯誤：", err);
+    }
+  }
+
+  // 從 Google Sheet 抓取同一姓名前測/後測分數
+  async function fetchHistory(name) {
+    if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("YOUR_SCRIPT_ID_HERE")) return null;
+    try {
+      const res = await fetch(GOOGLE_SCRIPT_URL + "?name=" + encodeURIComponent(name));
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error("讀取歷史資料錯誤：", err);
+      return null;
+    }
+  }
+
+  // 主流程：計算、顯示、寫入、載入前後測
+  async function gradeAndVisualize() {
     const answers = getAnswers();
     const unanswered = Object.keys(answers).filter(id => answers[id] === null);
     if (unanswered.length > 0) {
@@ -1179,12 +1237,62 @@
     }
 
     const { scores, quizCorrect, quizTotal } = computeDimensionScores(answers);
-    updateRadarChart(scores);
-    showQuestionFeedback(answers);
-
     const name = nameInput.value.trim();
+    const phase = phaseSelect.value || "pre";
+
+    const phaseLabel = phase === "pre" ? "前測" : "後測";
+    updateRadarSingle(scores, phaseLabel);
+    showQuestionFeedback(answers);
     buildFeedbackText(scores, quizCorrect, quizTotal, name);
-    statusText.textContent = "已完成結算 · 雷達圖與文字建議已更新（可重新作答再計算）。";
+
+    statusText.textContent = "已完成結算，嘗試寫入 Google Sheet 並讀取前後測資料…";
+
+    // 準備 payload
+    const dimObj = {};
+    DIMENSIONS.forEach((d, i) => { dimObj[d.key] = scores[i]; });
+
+    const payload = {
+      name: name,
+      phase: phase,
+      dimensionScores: dimObj,
+      quizCorrect: quizCorrect,
+      quizTotal: quizTotal,
+      answers: answers
+    };
+
+    // 寫入 Google Sheet
+    if (name) {
+      await saveToGoogleSheet(payload);
+    } else {
+      statusText.textContent = "已完成結算（未填姓名/代碼，因此僅本機顯示，不寫入 Google Sheet）。";
+      return;
+    }
+
+    // 讀取歷史資料並疊圖（若有另一時點）
+    const hist = await fetchHistory(name);
+    if (hist && (hist.pre || hist.post)) {
+      let otherScores = null;
+      let otherPhase = null;
+
+      if (phase === "pre" && hist.post && Array.isArray(hist.post.scores)) {
+        otherScores = hist.post.scores.map(Number);
+        otherPhase = "post";
+      } else if (phase === "post" && hist.pre && Array.isArray(hist.pre.scores)) {
+        otherScores = hist.pre.scores.map(Number);
+        otherPhase = "pre";
+      }
+
+      if (otherScores) {
+        updateRadarWithHistory(scores, phase, otherScores, otherPhase);
+        statusText.textContent = `已寫入 Google Sheet，並載入同一代碼的 ${phaseLabel} 與 ${
+          otherPhase === "pre" ? "前測" : "後測"
+        } 雷達圖。`;
+      } else {
+        statusText.textContent = "已寫入 Google Sheet，目前僅找到本次作答紀錄（尚無另一時點可比較）。";
+      }
+    } else {
+      statusText.textContent = "已寫入 Google Sheet，但未找到歷史前測/後測資料或讀取失敗。";
+    }
   }
 
   function resetAll() {
@@ -1198,15 +1306,28 @@
       e.textContent = "";
     });
     statusText.textContent = "已清除作答 · 可重新開始。";
-    scoreMainText.textContent = "尚未產生結果。請先完成作答並按「送出 / 產生雷達圖」。";
-    feedbackList.innerHTML = "<li>送出後，這裡會顯示各構面的分數（0–100）與下一步學習建議。</li><li>第 11–20 題的解析會出現在各題下方，可做為課堂講解素材。</li>";
+    scoreMainText.textContent = "尚未產生結果。請先完成作答並按「送出 / 寫入 Google Sheet 並產生雷達圖」。";
+    feedbackList.innerHTML =
+      "<li>送出後，這裡會顯示各構面的分數（0–100）與下一步學習建議。</li>" +
+      "<li>第 11–20 題的解析會出現在各題下方，可做為課堂講解素材。</li>" +
+      "<li>如同一姓名/代碼曾做過前測或後測，系統會嘗試載入另一時點並疊圖顯示。</li>";
     if (radarChart) {
-      radarChart.data.datasets[0].data = [0,0,0,0,0,0];
+      radarChart.data.datasets = [{
+        label: "本次作答",
+        data: [0,0,0,0,0,0],
+        borderWidth: 2,
+        fill: true,
+        backgroundColor: "rgba(37,99,235,0.18)",
+        borderColor: "rgba(37,99,235,1)",
+        pointBackgroundColor: "rgba(37,99,235,1)",
+        pointBorderColor: "#ffffff",
+        pointRadius: 3
+      }];
       radarChart.update();
     }
   }
 
-  submitBtn.addEventListener("click", gradeAndVisualize);
+  submitBtn.addEventListener("click", () => { gradeAndVisualize(); });
   resetBtn.addEventListener("click", resetAll);
 
   function scrollToQuiz() {
