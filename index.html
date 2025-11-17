@@ -2,236 +2,724 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <title>AI 時代物理治療 PGY 基礎統計能力測驗</title>
-  <!-- Chart.js CDN -->
+  <title>物理治療 PGY 教學 · AI與統計分析自我評估</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
+    :root {
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --text-main: #111827;
+      --text-sub: #6b7280;
+      --primary: #2563eb;
+      --primary-soft: #dbeafe;
+      --accent: #10b981;
+      --danger: #f97316;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
-      background: #f5f7fb;
       margin: 0;
-      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC",
+        system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
     }
 
-    header {
-      background: linear-gradient(135deg, #0052cc, #3399ff);
-      color: #fff;
-      padding: 24px 16px;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    a { color: var(--primary); }
+
+    .shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 1.7rem;
+    header.hero {
+      padding: 16px 12px 12px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, #eff6ff, #e0f2fe);
     }
 
-    header p {
-      margin: 8px 0 0;
-      font-size: 0.95rem;
-      opacity: 0.9;
-    }
-
-    .container {
+    .hero-inner {
       max-width: 960px;
-      margin: 24px auto 40px;
-      padding: 0 16px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
     }
 
-    .info-card {
+    .hero-left { flex: 1 1 260px; min-width: 260px; }
+
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
       background: #ffffff;
-      border-radius: 10px;
-      padding: 16px 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      border: 1px solid #bfdbfe;
+      font-size: 0.76rem;
+      color: #1d4ed8;
+      margin-bottom: 8px;
+    }
+
+    .hero-label span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.5rem, 3.2vw, 2.1rem);
+      letter-spacing: 0.02em;
+    }
+
+    .hero-subtitle {
+      margin: 0 0 10px;
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      line-height: 1.6;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .hero-tag {
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #eff6ff;
+      border: 1px solid #d1d5db;
+      color: #1f2937;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      border-radius: 999px;
+      padding: 8px 16px;
+      border: none;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
+      transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.08s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      box-shadow: 0 10px 22px rgba(37, 99, 235, 0.45);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: 0 5px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-ghost {
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.82rem;
+      border: 1px solid #cbd5f5;
+      background: #ffffff;
+      color: var(--text-sub);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .hero-right {
+      flex: 0 1 260px;
+      min-width: 230px;
+    }
+
+    .hero-card {
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: #ffffff;
+      border: 1px solid #dbeafe;
+      box-shadow: 0 8px 18px rgba(148, 163, 184, 0.35);
+      font-size: 0.8rem;
+    }
+
+    .hero-card-title { font-size: 0.9rem; margin: 0 0 6px; }
+    .hero-card p { margin: 2px 0; color: var(--text-sub); }
+
+    main {
+      flex: 1;
+      padding: 10px 12px 22px;
+    }
+
+    .layout {
+      max-width: 960px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 860px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 12px 12px 14px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+    }
+
+    .card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
+      gap: 8px;
+      margin-bottom: 6px;
     }
 
-    .info-card h2 {
-      margin: 0;
-      font-size: 1.2rem;
-      color: #333;
-    }
-
-    .score-display {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #0052cc;
-    }
-
-    .btn-submit {
-      background: #0052cc;
-      color: #fff;
-      border: none;
-      border-radius: 999px;
-      padding: 10px 22px;
-      font-size: 0.98rem;
-      cursor: pointer;
-      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.2s ease;
-      box-shadow: 0 3px 6px rgba(0, 82, 204, 0.4);
-      display: inline-flex;
+    .card-title {
+      font-size: 0.92rem;
+      display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    .btn-submit:hover {
-      background: #0041a8;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 10px rgba(0, 82, 204, 0.5);
+    .pill-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      border: 1px solid #60a5fa;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      color: #1d4ed8;
     }
 
-    .btn-submit:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 4px rgba(0, 82, 204, 0.4);
+    .card-sub {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      text-align: right;
     }
 
-    .quiz-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
+    .step-body {
+      font-size: 0.84rem;
+      color: var(--text-main);
+      line-height: 1.6;
     }
 
-    @media (min-width: 900px) {
-      .quiz-grid {
-        grid-template-columns: 1fr 1fr;
+    .info-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 8px;
+      align-items: flex-end;
+    }
+
+    .field-label {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      margin-bottom: 2px;
+    }
+
+    .name-input {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--text-main);
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      font-family: inherit;
+      width: 190px;
+      max-width: 100%;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      border: 1px solid #d1d5db;
+      color: var(--text-sub);
+      background: #f9fafb;
+    }
+
+    .badge.green {
+      border-color: #86efac;
+      color: #166534;
+      background: #dcfce7;
+    }
+
+    .question-list {
+      margin-top: 4px;
+      max-height: 520px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    @media (max-width: 600px) {
+      .question-list {
+        max-height: none;
       }
     }
 
-    .question-card {
-      background: #ffffff;
+    .q-card {
       border-radius: 10px;
-      padding: 14px 16px 16px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-      border-left: 4px solid transparent;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      padding: 8px 9px 9px;
+      margin-bottom: 8px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.08s ease;
     }
 
-    .question-card:hover {
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
+    .q-card:hover {
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
       transform: translateY(-1px);
     }
 
-    .question-title {
-      font-weight: 600;
-      margin-bottom: 4px;
-      font-size: 0.95rem;
-      color: #555;
+    .q-card.correct {
+      border-color: #22c55e;
     }
 
-    .question-text {
-      margin-bottom: 8px;
-      font-size: 0.93rem;
-      color: #222;
+    .q-card.incorrect {
+      border-color: #f97316;
+    }
+
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+
+    .q-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .q-tag {
+      font-size: 0.7rem;
+      color: var(--text-sub);
+      border-radius: 999px;
+      padding: 2px 6px;
+      border: 1px solid var(--border);
+      background: #f9fafb;
+    }
+
+    .q-text {
+      font-size: 0.82rem;
+      color: var(--text-main);
+      margin: 2px 0 6px;
       line-height: 1.5;
     }
 
-    .options {
-      margin-bottom: 6px;
-    }
-
-    .option-label {
+    .q-options label {
       display: block;
-      font-size: 0.9rem;
-      margin: 3px 0;
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      margin: 2px 0;
       cursor: pointer;
     }
 
-    .option-label input {
-      margin-right: 6px;
-    }
+    .q-options input { margin-right: 5px; }
 
-    .explanation {
-      margin-top: 6px;
-      padding: 6px 8px;
-      border-radius: 6px;
-      font-size: 0.85rem;
+    .q-exp {
+      margin-top: 5px;
+      padding: 6px 7px;
+      border-radius: 8px;
+      font-size: 0.78rem;
       display: none;
     }
 
-    .explanation.correct {
-      background: #e6f7e9;
-      color: #237804;
+    .q-exp.correct {
+      background: #dcfce7;
+      color: #166534;
     }
 
-    .explanation.incorrect {
-      background: #fff1f0;
-      color: #a8071a;
+    .q-exp.incorrect {
+      background: #fef3c7;
+      color: #92400e;
     }
 
-    .question-card.correct {
-      border-left-color: #52c41a;
+    .actions-row {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
     }
 
-    .question-card.incorrect {
-      border-left-color: #ff4d4f;
+    .status-text {
+      font-size: 0.78rem;
+      color: var(--text-sub);
     }
 
-    .summary-text {
+    .chart-box {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      padding: 10px 10px 11px;
+      margin-top: 6px;
+    }
+
+    .chart-box h3 {
+      margin: 0 0 6px;
       font-size: 0.9rem;
-      margin-top: 4px;
-      color: #555;
     }
 
-    .chart-container {
+    .chart-box p {
+      margin: 0 0 6px;
+      font-size: 0.8rem;
+      color: var(--text-sub);
+    }
+
+    .chart-wrapper {
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    canvas {
       background: #ffffff;
       border-radius: 10px;
-      padding: 16px;
-      margin-top: 20px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e5e7eb;
     }
 
-    .chart-container h3 {
-      margin-top: 0;
-      font-size: 1rem;
-      color: #333;
-    }
-
-    .small-note {
-      font-size: 0.82rem;
-      color: #777;
+    .score-card {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      padding: 8px 9px;
       margin-top: 6px;
+      font-size: 0.8rem;
+    }
+
+    .score-main {
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .score-main strong { color: #b45309; }
+
+    .feedback-list {
+      margin: 4px 0 0;
+      padding-left: 18px;
+      font-size: 0.78rem;
+      color: var(--text-sub);
+    }
+
+    .feedback-list li { margin: 3px 0; }
+
+    footer {
+      padding: 8px 12px 12px;
+      border-top: 1px solid var(--border);
+      background: #f9fafb;
+      font-size: 0.76rem;
+      color: var(--text-sub);
+    }
+
+    .footer-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 6px;
+      align-items: center;
     }
   </style>
 </head>
 <body>
-<header>
-  <h1>物理治療 PGY 基礎統計能力測驗</h1>
-  <p>請完成 10 題單選題，按下「送出 / 結算分數」後，系統會顯示得分、每題解析與答對 / 答錯長條圖。</p>
-</header>
-
-<div class="container">
-  <div class="info-card">
-    <div>
-      <h2>測驗資訊</h2>
-      <p class="summary-text">題數：10 題　｜　題型：單選題　｜　主題：臨床統計基礎概念</p>
-      <p id="scoreText" class="score-display">尚未作答</p>
+<div class="shell">
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-label">
+          <span class="dot"></span>
+          <span>物理治療 PGY 教學 · AI與統計分析</span>
+        </div>
+        <h1>AI 時代的 PGY · 自我盤點與統計概念小測驗</h1>
+        <p class="hero-subtitle">
+          一次完成 20 題作答，盤點自己在「AI 工具、統計基礎、資料分析、期刊閱讀」的現況。
+          送出後自動產生 <strong>六構面雷達圖</strong> 與文字建議，可作為 PGY 教學分組與個別輔導依據。
+        </p>
+        <div class="hero-tags">
+          <span class="hero-tag">PGY 起始能力評估</span>
+          <span class="hero-tag">AI 應用 x 統計素養</span>
+          <span class="hero-tag">Radar Chart 能力輪廓</span>
+        </div>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="scrollToQuiz()">
+            開始作答（1–20 題）
+          </button>
+          <button class="btn-ghost" onclick="scrollToSummary()">
+            看雷達圖與建議 →
+          </button>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-card">
+          <p class="hero-card-title">使用方式（建議流程）</p>
+          <p>1. PGY 於課前以手機或電腦線上作答。</p>
+          <p>2. 20 題皆在同一頁呈現，可隨時回頭修改選項。</p>
+          <p>3. 按下「送出 / 產生雷達圖」後，右側會顯示六構面分數與學習建議。</p>
+          <p>4. 教師可依分數高低安排：基礎補強組、實作練習組、進階整合組。</p>
+        </div>
+      </div>
     </div>
-    <button id="submitBtn" class="btn-submit">
-      送出 / 結算分數
-    </button>
-  </div>
+  </header>
 
-  <div id="quiz" class="quiz-grid">
-    <!-- 題目將由 JavaScript 動態產生 -->
-  </div>
+  <main>
+    <div class="layout">
+      <!-- 左側：題目區（1–20 題同頁呈現） -->
+      <section class="card" id="quiz-section">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="pill-icon">Q</span>
+            <span>PGY 自評問卷 · 20 題（同頁作答）</span>
+          </div>
+          <span class="card-sub">第 1–10 題：AI / 統計經驗　·　第 11–20 題：統計概念測驗</span>
+        </div>
+        <div class="step-body">
+          <div class="info-row">
+            <div>
+              <div class="field-label">姓名或代碼（選填，用於討論或追蹤）</div>
+              <input id="nameInput" class="name-input" placeholder="例如：PGY-01 或暱稱" />
+            </div>
+            <span class="badge green">共 20 題 · 四選一 · 皆在本頁完成</span>
+          </div>
 
-  <div class="chart-container">
-    <h3>作答結果視覺化</h3>
-    <canvas id="resultChart" height="120"></canvas>
-    <p class="small-note">※ 長條圖會在送出後更新，顯示本次作答的「答對題數」與「答錯題數」。</p>
-  </div>
+          <div class="question-list" id="questionList">
+            <!-- 題目由 JS 動態產生（1–20 題同頁） -->
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-primary" id="submitBtn">
+              送出 / 產生雷達圖
+            </button>
+            <button class="btn-ghost" type="button" id="resetBtn">
+              清除全部作答
+            </button>
+            <span id="statusText" class="status-text">尚未結算 · 建議盡量完成所有題目後再送出。</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 右側：雷達圖與建議 -->
+      <section class="card" id="summary-section">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="pill-icon">R</span>
+            <span>AI x 統計能力雷達圖 · 六構面</span>
+          </div>
+          <span class="card-sub">彩色深淺簡約風格 · 0–100 分量尺 · 送出後自動更新</span>
+        </div>
+        <div class="step-body">
+          <div class="chart-box">
+            <h3>你的 AI / 統計能力輪廓</h3>
+            <p>
+              構面包含：
+              <strong>AI 工具熟悉度、AI 應用與學習、統計工具與資料處理、統計與研究實作、期刊閱讀與批判、統計概念測驗</strong>。
+            </p>
+            <div class="chart-wrapper">
+              <canvas id="radarChart" height="270"></canvas>
+            </div>
+          </div>
+
+          <div class="score-card" id="scoreCard">
+            <div class="score-main" id="scoreMainText">
+              尚未產生結果。請先完成作答並按「送出 / 產生雷達圖」。
+            </div>
+            <ul class="feedback-list" id="feedbackList">
+              <li>送出後，這裡會顯示各構面的分數（0–100）與下一步學習建議。</li>
+              <li>第 11–20 題的解析會出現在各題下方，可做為課堂講解素材。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span>教學建議：可課前先填寫，課堂上用投影示範一位 PGY 的雷達圖與答題解析，引出討論。</span>
+      <span>技術說明：單一 HTML 檔 · 純前端 Chart.js 雷達圖 · 適配手機與桌機。</span>
+    </div>
+  </footer>
 </div>
 
 <script>
-  // 題庫資料結構
-  const questions = [
+  // ====== 問題資料 ======
+  // 前 10 題：AI / 統計 / 資料分析經驗（Likert A=1 ~ D=4）
+  const aiQuestions = [
     {
       id: 1,
-      title: "第 1 題（變項型態認定）",
+      section: "ai",
+      title: "第 1 題",
+      tag: "AI 工具熟悉度",
+      text: "您對「AI 工具」（例如 ChatGPT、Copilot、Gemini 等）的熟悉程度為何？",
+      options: [
+        "A. 幾乎沒用過，也不太知道怎麼用",
+        "B. 偶爾用過，但不太會主動善用功能",
+        "C. 常用在工作或學習上，例如寫報告、找資料",
+        "D. 非常熟悉，也會自己設計問題（Prompt）讓 AI 做事"
+      ]
+    },
+    {
+      id: 2,
+      section: "ai",
+      title: "第 2 題",
+      tag: "AI 使用頻率",
+      text: "您在「學習或工作」中，使用 AI 工具協助完成任務的頻率？",
+      options: [
+        "A. 幾乎從來沒有使用過",
+        "B. 偶爾想到才用一下（每月少於 1 次）",
+        "C. 覺得蠻好用，平均每週會用幾次",
+        "D. 幾乎天天使用，是日常工作流程的一部分"
+      ]
+    },
+    {
+      id: 3,
+      section: "ai",
+      title: "第 3 題",
+      tag: "AI / 統計課程參與",
+      text: "過去一年，您是否曾經參加與「AI、資料分析或統計」相關的課程／工作坊？",
+      options: [
+        "A. 完全沒有參加過",
+        "B. 只有參加過 1 場、時間很短（例如單次演講）",
+        "C. 參加過好幾場，對內容有一些印象",
+        "D. 有參加過系統性的課程（例如一整學期或系列工作坊）"
+      ]
+    },
+    {
+      id: 4,
+      section: "ai",
+      title: "第 4 題",
+      tag: "統計工具使用",
+      text: "您平常做統計或畫圖時，主要是依靠哪一種工具？（請選「最符合」您目前習慣的一項）",
+      options: [
+        "A. 幾乎沒有自己做過統計或畫圖",
+        "B. 只用 Excel 做簡單計算或畫基本圖表",
+        "C. 會使用 SPSS、R、Python 等統計軟體或程式",
+        "D. 會同時用統計軟體與 AI 工具（請 AI 幫忙寫程式或解釋結果）"
+      ]
+    },
+    {
+      id: 5,
+      section: "ai",
+      title: "第 5 題",
+      tag: "統計結果理解",
+      text: "面對論文中出現的統計結果（例如 p 值、信賴區間、t 檢定、卡方檢定），您的感受最接近哪一項？",
+      options: [
+        "A. 大多看不懂，只能略過",
+        "B. 勉強知道意思，但很難自己解釋給別人聽",
+        "C. 大致看得懂，也能抓到重點結論",
+        "D. 不但看得懂，還能檢查分析方法是否合理"
+      ]
+    },
+    {
+      id: 6,
+      section: "ai",
+      title: "第 6 題",
+      tag: "資料分析實作經驗",
+      text: "您是否曾經自己負責「分析研究資料」或「撰寫結果段落」？",
+      options: [
+        "A. 沒有，研究或報告的統計部分幾乎都不是我負責",
+        "B. 有稍微碰過，但多半是在別人的指導或範例下完成",
+        "C. 有獨立完成過 1–2 個研究或報告的統計分析",
+        "D. 經常負責統計分析與結果撰寫，也是同儕會來詢問的人"
+      ]
+    },
+    {
+      id: 7,
+      section: "ai",
+      title: "第 7 題",
+      tag: "期刊閱讀習慣",
+      text: "您在閱讀醫學或復健相關期刊文章時，通常的習慣是？",
+      options: [
+        "A. 幾乎不會主動看期刊文章",
+        "B. 只看摘要和結論，不太看方法與統計",
+        "C. 會看方法與結果，但較少深入思考統計細節",
+        "D. 會仔細閱讀方法與統計部分，評估研究品質與限制"
+      ]
+    },
+    {
+      id: 8,
+      section: "ai",
+      title: "第 8 題",
+      tag: "Excel / 資料處理",
+      text: "您對 Excel 的使用程度，大致為何？",
+      options: [
+        "A. 只能做最基本的輸入與排序",
+        "B. 會用加總、平均、簡單圖表等基本功能",
+        "C. 會使用多種公式（如 IF、VLOOKUP、樞紐分析）",
+        "D. 除了公式外，還會錄製巨集或寫 VBA（或類似自動化方式）"
+      ]
+    },
+    {
+      id: 9,
+      section: "ai",
+      title: "第 9 題",
+      tag: "AI 協助寫程式",
+      text: "如果請您「用 AI 協助寫統計程式碼」（例如 R 或 Python），您的感受最接近？",
+      options: [
+        "A. 完全沒有概念，也不知道從何開始",
+        "B. 感覺可以試試看，但需要很明確的範例帶著做",
+        "C. 可以自己描述需求，讓 AI 產生程式，再邊調整邊學",
+        "D. 已經習慣讓 AI 幫忙寫或修改統計程式碼，並能檢查其正確性"
+      ]
+    },
+    {
+      id: 10,
+      section: "ai",
+      title: "第 10 題",
+      tag: "本次教學期待",
+      text: "針對本次「AI + 統計圖表」教學，您目前的自我期待與狀態最接近哪一項？",
+      options: [
+        "A. 我幾乎是從零開始，希望先建立最基本的概念",
+        "B. 有一點基礎，但希望有人帶我實作，知道怎麼開始用",
+        "C. 已有基礎，希望學習更有效率的 AI 使用方式與實務技巧",
+        "D. 希望學到足以協助同儕或學弟妹的程度，成為小老師角色"
+      ]
+    }
+  ];
+
+  // 後 10 題：統計概念測驗（有正確答案）
+  const statsQuestions = [
+    {
+      id: 11,
+      section: "stats",
+      title: "第 11 題",
+      tag: "變項型態",
       text: "某中風 PAC 研究收集下列資料：1. 性別（男／女） 2. 年齡（歲） 3. Barthel Index（0–100 分，整數） 4. 是否使用尿管（是／否） 5. PAC 完成與否（完成／中斷）。下列配對何者正確？",
       options: [
         "A. 性別：連續變項",
@@ -243,8 +731,10 @@
       explanation: "BI（Barthel Index）是 0–100 分的量表，屬於連續型（至少可視為近似連續），選項 C 正確。性別與是否使用尿管都是類別變項，年齡則是連續變項。"
     },
     {
-      id: 2,
-      title: "第 2 題（集中趨勢指標）",
+      id: 12,
+      section: "stats",
+      title: "第 12 題",
+      tag: "集中趨勢",
       text: "某批中風病人出院後 3 個月 FIM 分數分布明顯右偏（多數集中在高分，少數非常低分）。若想描述「典型病人」的功能表現，下列哪一個統計量較合適？",
       options: [
         "A. 平均數（mean）",
@@ -256,8 +746,10 @@
       explanation: "分布明顯偏態時，中位數較不受極端值影響，比平均數更能代表「典型」個案，因此 B 正確。"
     },
     {
-      id: 3,
-      title: "第 3 題（標準差概念）",
+      id: 13,
+      section: "stats",
+      title: "第 13 題",
+      tag: "標準差",
       text: "住院中風病人的住院天數，兩個病房的平均數皆為 20 天：病房 A：平均 20 天，標準差 3 天；病房 B：平均 20 天，標準差 10 天。就「住院天數變異程度」的解讀，下列何者正確？",
       options: [
         "A. 兩病房住院天數變異程度差不多",
@@ -269,8 +761,10 @@
       explanation: "標準差愈大代表資料離平均值愈分散。病房 B 的 SD = 10 天 > 病房 A 的 3 天，表示 B 的住院天數差異較大，A 較固定。"
     },
     {
-      id: 4,
-      title: "第 4 題（p 值意義）",
+      id: 14,
+      section: "stats",
+      title: "第 14 題",
+      tag: "p 值解讀",
       text: "某研究比較「有使用踝足矯具」與「未使用」病人 3 個月步態速度，t 檢定得到 p = 0.03。較正確的解讀是：",
       options: [
         "A. 兩組完全沒有差異",
@@ -282,8 +776,10 @@
       explanation: "p = 0.03 < 0.05，在統計上可說兩組平均步態速度有顯著差異，但不代表一定有臨床上重要差異，也不能保證模型完全正確。"
     },
     {
-      id: 5,
-      title: "第 5 題（檢定選擇：兩組比較）",
+      id: 15,
+      section: "stats",
+      title: "第 15 題",
+      tag: "兩組比較方法",
       text: "你想比較「居家復健組」與「門診復健組」中風病人，在 12 週後的 6 分鐘步行距離（6MWD，公尺，連續型）是否不同，各組樣本數約 40 人，數據近似常態分布。最適合的統計方法為：",
       options: [
         "A. 配對 t 檢定（paired t-test）",
@@ -295,8 +791,10 @@
       explanation: "兩組為不同個體（居家組 vs 門診組），比較連續變項的平均數，且近似常態，最合適為獨立樣本 t 檢定。"
     },
     {
-      id: 6,
-      title: "第 6 題（檢定選擇：前後比較）",
+      id: 16,
+      section: "stats",
+      title: "第 16 題",
+      tag: "前後比較方法",
       text: "你想評估某平衡訓練計畫是否能改善中風病人的 Berg 平衡量表分數，同一批病人接受訓練前與 8 週後皆測量 Berg 分數。比較前後差異時，最合適的統計方法為：",
       options: [
         "A. 配對 t 檢定（paired t-test）",
@@ -308,8 +806,10 @@
       explanation: "同一批個案的前後分數，屬於成對資料，比較平均差異應使用配對 t 檢定（若常態假設合理）。"
     },
     {
-      id: 7,
-      title: "第 7 題（相關 vs 因果）",
+      id: 17,
+      section: "stats",
+      title: "第 17 題",
+      tag: "相關 vs 因果",
       text: "某研究發現，住院中風病人的「早期復健介入小時數」與「出院時 FIM 分數」之間皮爾森相關係數 r = 0.60，p < 0.01。下列哪一種說法最適當？",
       options: [
         "A. 證明早期復健一定造成 FIM 進步",
@@ -321,8 +821,10 @@
       explanation: "r = 0.60 代表中度正相關，但相關研究無法單純證明因果關係，因此最適當的說法是有中度正相關但不能直接推論因果。"
     },
     {
-      id: 8,
-      title: "第 8 題（信賴區間）",
+      id: 18,
+      section: "stats",
+      title: "第 18 題",
+      tag: "信賴區間",
       text: "若某研究報告：「治療組與對照組 BI 平均差異為 8 分，其 95% 信賴區間為 2 到 14 分」，較合適的解讀是：",
       options: [
         "A. 有 95% 的病人 BI 會落在 2 到 14 分之間",
@@ -334,8 +836,10 @@
       explanation: "95% 信賴區間指的是：在重複抽樣的觀點下，有約 95% 的信心真實平均差異落在 2 到 14 分，而不是病人個別分數的範圍。"
     },
     {
-      id: 9,
-      title: "第 9 題（類別資料分析）",
+      id: 19,
+      section: "stats",
+      title: "第 19 題",
+      tag: "類別資料檢定",
       text: "你想比較「有跌倒」與「無跌倒」在「是否使用助行器（是／否）」上的比例差異，樣本數約 100 人。最合適的統計方法是：",
       options: [
         "A. t 檢定",
@@ -347,8 +851,10 @@
       explanation: "跌倒（有／無）與助行器使用（是／否）皆為類別變項，兩個類別變項比例差異通常使用卡方檢定（或在樣本數很小時用 Fisher 精確檢定）。"
     },
     {
-      id: 10,
-      title: "第 10 題（概念整合：研究設計與分析配對）",
+      id: 20,
+      section: "stats",
+      title: "第 20 題",
+      tag: "研究設計與分析配對",
       text: "某 PGY 設計一個小型研究：「針對住院中風病人，導入一套新式步態訓練方案，比較導入前後 4 週的步態速度與跌倒發生率。」收集指標包括步態速度（m/s，連續）與跌倒是否發生（是／否）。下列分析配對何者較合理？",
       options: [
         "A. 步態速度 → 獨立樣本 t 檢定；跌倒 → 線性迴歸",
@@ -361,162 +867,365 @@
     }
   ];
 
-  const quizContainer = document.getElementById("quiz");
-  const scoreText = document.getElementById("scoreText");
+  const QUESTIONS = [...aiQuestions, ...statsQuestions];
+
+  // ====== 能力構面定義（六軸） ======
+  const DIMENSIONS = [
+    {
+      key: "ai_basic",
+      label: "AI 工具熟悉度",
+      questionIds: [1, 2]
+    },
+    {
+      key: "ai_learning",
+      label: "AI 應用與學習投入",
+      questionIds: [3, 9, 10]
+    },
+    {
+      key: "tool_data",
+      label: "統計工具與資料處理",
+      questionIds: [4, 8]
+    },
+    {
+      key: "stats_practice",
+      label: "統計與研究實作經驗",
+      questionIds: [5, 6]
+    },
+    {
+      key: "reading",
+      label: "期刊閱讀與批判",
+      questionIds: [7]
+    },
+    {
+      key: "stats_quiz",
+      label: "統計概念測驗成績",
+      questionIds: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    }
+  ];
+
+  const questionListEl = document.getElementById("questionList");
+  const statusText = document.getElementById("statusText");
   const submitBtn = document.getElementById("submitBtn");
+  const resetBtn = document.getElementById("resetBtn");
+  const nameInput = document.getElementById("nameInput");
+  const scoreMainText = document.getElementById("scoreMainText");
+  const feedbackList = document.getElementById("feedbackList");
 
-  // 動態產生題目
-  function renderQuiz() {
-    questions.forEach((q, index) => {
+  // 將 20 題一次渲染在同一頁
+  function renderAllQuestions() {
+    questionListEl.innerHTML = "";
+    QUESTIONS.forEach(q => {
       const card = document.createElement("div");
-      card.className = "question-card";
-      card.dataset.index = index;
+      card.className = "q-card";
+      card.dataset.qid = q.id;
 
-      const titleEl = document.createElement("div");
-      titleEl.className = "question-title";
-      titleEl.textContent = q.title;
+      const header = document.createElement("div");
+      header.className = "q-header";
 
-      const textEl = document.createElement("div");
-      textEl.className = "question-text";
-      textEl.textContent = q.text;
+      const title = document.createElement("div");
+      title.className = "q-title";
+      title.textContent = `${q.title}（${q.tag}）`;
 
-      const optionsEl = document.createElement("div");
-      optionsEl.className = "options";
+      const tag = document.createElement("div");
+      tag.className = "q-tag";
+      tag.textContent = q.section === "ai" ? "背景 / 自評" : "統計概念測驗";
 
-      q.options.forEach((opt, optIndex) => {
+      header.appendChild(title);
+      header.appendChild(tag);
+
+      const text = document.createElement("div");
+      text.className = "q-text";
+      text.textContent = q.text;
+
+      const opts = document.createElement("div");
+      opts.className = "q-options";
+      q.options.forEach((opt, idx) => {
         const label = document.createElement("label");
-        label.className = "option-label";
-
         const input = document.createElement("input");
         input.type = "radio";
-        input.name = "q" + index;
-        input.value = optIndex;
-
+        input.name = "q-" + q.id;
+        input.value = idx;
         label.appendChild(input);
         label.appendChild(document.createTextNode(opt));
-        optionsEl.appendChild(label);
+        opts.appendChild(label);
       });
 
-      const expEl = document.createElement("div");
-      expEl.className = "explanation";
-      expEl.id = "exp-" + index;
+      const exp = document.createElement("div");
+      exp.className = "q-exp";
+      exp.id = "exp-" + q.id;
 
-      card.appendChild(titleEl);
-      card.appendChild(textEl);
-      card.appendChild(optionsEl);
-      card.appendChild(expEl);
+      card.appendChild(header);
+      card.appendChild(text);
+      card.appendChild(opts);
+      card.appendChild(exp);
 
-      quizContainer.appendChild(card);
+      questionListEl.appendChild(card);
     });
   }
 
-  // Chart.js 初始化
-  let resultChart = null;
-  function initChart() {
-    const ctx = document.getElementById("resultChart").getContext("2d");
-    resultChart = new Chart(ctx, {
-      type: "bar",
+  // 雷達圖
+  let radarChart = null;
+
+  function initRadarChart() {
+    const ctx = document.getElementById("radarChart");
+    if (!ctx) return;
+    radarChart = new Chart(ctx, {
+      type: "radar",
       data: {
-        labels: ["答對題數", "答錯題數"],
+        labels: DIMENSIONS.map(d => d.label),
         datasets: [{
-          label: "題數",
-          data: [0, 0],
-          borderWidth: 1
+          label: "能力構面（0–100）",
+          data: [0, 0, 0, 0, 0, 0],
+          borderWidth: 2,
+          fill: true,
+          backgroundColor: "rgba(37,99,235,0.18)",
+          borderColor: "rgba(37,99,235,1)",
+          pointBackgroundColor: "rgba(37,99,235,1)",
+          pointBorderColor: "#ffffff",
+          pointRadius: 3
         }]
       },
       options: {
         responsive: true,
-        animation: {
-          duration: 700
-        },
+        maintainAspectRatio: false,
         scales: {
-          y: {
-            beginAtZero: true,
-            precision: 0,
+          r: {
+            suggestedMin: 0,
+            suggestedMax: 100,
             ticks: {
-              stepSize: 1
+              stepSize: 20,
+              backdropColor: "transparent",
+              color: "#6b7280"
+            },
+            grid: {
+              color: "rgba(209,213,219,0.8)"
+            },
+            angleLines: {
+              color: "rgba(209,213,219,0.8)"
+            },
+            pointLabels: {
+              font: { size: 10 },
+              color: "#374151"
             }
           }
         },
         plugins: {
-          legend: {
-            display: false
-          }
+          legend: { display: false }
         }
       }
     });
   }
 
-  // 更新圖表
-  function updateChart(correct, incorrect) {
-    if (!resultChart) return;
-    resultChart.data.datasets[0].data = [correct, incorrect];
-    resultChart.update();
+  function updateRadarChart(scores) {
+    if (!radarChart) return;
+    radarChart.data.datasets[0].data = scores;
+    radarChart.update();
   }
 
-  // 結算分數與解析
-  function gradeQuiz() {
-    let correctCount = 0;
-    const total = questions.length;
+  // 收集答案
+  function getAnswers() {
+    const answers = {};
+    QUESTIONS.forEach(q => {
+      const checked = document.querySelector(`input[name="q-${q.id}"]:checked`);
+      answers[q.id] = checked ? parseInt(checked.value, 10) : null;
+    });
+    return answers;
+  }
 
-    questions.forEach((q, index) => {
-      const card = document.querySelector(`.question-card[data-index="${index}"]`);
-      const selected = document.querySelector(`input[name="q${index}"]:checked`);
-      const expEl = document.getElementById("exp-" + index);
+  function likertToScore(optionIndex) {
+    if (optionIndex === null || optionIndex === undefined) return 0;
+    return ((optionIndex + 1) / 4) * 100; // A~D -> 25,50,75,100
+  }
 
-      card.classList.remove("correct", "incorrect");
-      expEl.classList.remove("correct", "incorrect");
-      expEl.style.display = "block";
+  function computeDimensionScores(answers) {
+    let quizCorrect = 0;
+    let quizTotal = 0;
 
-      if (!selected) {
-        expEl.textContent = "尚未作答本題。正確答案：" +
-          q.options[q.correctIndex].slice(0, 2) +
-          "。解析：" + q.explanation;
-        expEl.classList.add("incorrect");
-        card.classList.add("incorrect");
-        return;
-      }
+    statsQuestions.forEach(q => {
+      quizTotal++;
+      const ans = answers[q.id];
+      if (ans !== null && ans === q.correctIndex) quizCorrect++;
+    });
 
-      const selectedIndex = parseInt(selected.value, 10);
-      if (selectedIndex === q.correctIndex) {
-        correctCount++;
-        card.classList.add("correct");
-        expEl.classList.add("correct");
-        expEl.textContent = "答對了！" +
-          "正確答案：" + q.options[q.correctIndex].slice(0, 2) +
-          "。解析：" + q.explanation;
+    const scores = [];
+
+    DIMENSIONS.forEach(dim => {
+      if (dim.key === "stats_quiz") {
+        const val = quizTotal > 0 ? (quizCorrect / quizTotal) * 100 : 0;
+        scores.push(Math.round(val));
       } else {
-        card.classList.add("incorrect");
-        expEl.classList.add("incorrect");
-        expEl.textContent = "答錯了。你選的是：「" +
-          q.options[selectedIndex].slice(0, 2) +
-          "」，正確答案是：" +
-          q.options[q.correctIndex].slice(0, 2) +
-          "。解析：" + q.explanation;
+        const ids = dim.questionIds;
+        let sum = 0;
+        let count = 0;
+        ids.forEach(id => {
+          const ans = answers[id];
+          if (ans !== null) {
+            sum += likertToScore(ans);
+            count++;
+          }
+        });
+        const val = count > 0 ? sum / count : 0;
+        scores.push(Math.round(val));
       }
     });
 
-    const incorrectCount = total - correctCount;
-    let levelText = "";
-    if (correctCount === total) {
-      levelText = "統計小高手，可以開始當 AI 的監督者了。";
-    } else if (correctCount >= 7) {
-      levelText = "基礎不錯，再多練幾次臨床案例就更穩。";
-    } else if (correctCount >= 4) {
-      levelText = "概念還需要再鞏固，建議再複習一次變項與檢定對應。";
-    } else {
-      levelText = "可以把這 10 題當作重點複習清單，逐題回顧。";
-    }
-
-    scoreText.textContent = `你的得分：${correctCount} / ${total} 題。${levelText}`;
-    updateChart(correctCount, incorrectCount);
+    return { scores, quizCorrect, quizTotal };
   }
 
-  // 初始化頁面
+  function showQuestionFeedback(answers) {
+    statsQuestions.forEach(q => {
+      const card = document.querySelector(`.q-card[data-qid="${q.id}"]`);
+      const exp = document.getElementById("exp-" + q.id);
+      if (!card || !exp) return;
+
+      card.classList.remove("correct", "incorrect");
+      exp.classList.remove("correct", "incorrect");
+      exp.style.display = "block";
+
+      const ans = answers[q.id];
+      if (ans === null) {
+        card.classList.add("incorrect");
+        exp.classList.add("incorrect");
+        exp.textContent = `尚未作答本題。正確答案：${q.options[q.correctIndex].slice(0, 2)}。解析：${q.explanation}`;
+      } else if (ans === q.correctIndex) {
+        card.classList.add("correct");
+        exp.classList.add("correct");
+        exp.textContent = `答對了！正確答案：${q.options[q.correctIndex].slice(0, 2)}。解析：${q.explanation}`;
+      } else {
+        card.classList.add("incorrect");
+        exp.classList.add("incorrect");
+        exp.textContent = `答錯了。你選的是「${q.options[ans].slice(0, 2)}」，正確答案是：${q.options[q.correctIndex].slice(0, 2)}。解析：${q.explanation}`;
+      }
+    });
+  }
+
+  function buildFeedbackText(scores, quizCorrect, quizTotal, name) {
+    const dimMap = {};
+    DIMENSIONS.forEach((d, i) => { dimMap[d.key] = scores[i]; });
+
+    const ratio = quizTotal ? (quizCorrect / quizTotal) : 0;
+    let level;
+    if (ratio >= 0.8) level = "統計概念掌握度高，可以把時間放在進階實作與 AI 工具整合。";
+    else if (ratio >= 0.5) level = "統計概念已有基礎，建議搭配更多臨床實例反覆練習。";
+    else level = "統計基礎需要補強，可先針對變項型態、t 檢定、卡方、信賴區間等主題集中復習。";
+
+    scoreMainText.innerHTML =
+      (name ? `<strong>${name}</strong>，` : "") +
+      `統計概念題得分：<strong>${quizCorrect} / ${quizTotal}</strong> 題。` +
+      `（約 ${Math.round(ratio * 100)} 分）${level}`;
+
+    feedbackList.innerHTML = "";
+
+    function pushSuggestion(dimKey, lowMsg, midMsg, highMsg) {
+      const s = dimMap[dimKey] || 0;
+      let msg;
+      if (s < 40) msg = lowMsg;
+      else if (s < 70) msg = midMsg;
+      else msg = highMsg;
+      const li = document.createElement("li");
+      li.textContent = `【${DIMENSIONS.find(d => d.key === dimKey).label}：${s} 分】${msg}`;
+      feedbackList.appendChild(li);
+    }
+
+    pushSuggestion(
+      "ai_basic",
+      "目前與 AI 工具還不太熟悉，建議從固定一個平台開始（例如 ChatGPT），每日嘗試 1–2 個小任務，建立使用習慣。",
+      "已經有一定使用經驗，建議刻意練習設計更具體的 Prompt，讓 AI 協助產出程式碼、摘要或教學素材。",
+      "AI 工具運用成熟，建議在團隊教學中扮演種子老師角色，示範如何讓 AI 成為臨床與研究的助手。"
+    );
+
+    pushSuggestion(
+      "ai_learning",
+      "目前參與 AI / 統計相關課程較少，可優先補足 1–2 門入門課程，建立全貌概念。",
+      "已有一定的課程與實作經驗，建議將學過內容套用到自己的 PGY 個案或小研究中。",
+      "在 AI / 統計學習上投入度高，可嘗試設計小型教學或工作坊，回饋與帶領同儕。"
+    );
+
+    pushSuggestion(
+      "tool_data",
+      "對統計工具與 Excel 仍屬初階，建議先熟悉 Excel 資料清理、樞紐分析，再逐步接觸 R / Python。",
+      "已能使用 Excel 與部分統計軟體，建議學習將同一份資料用兩種工具處理，體會長處與限制。",
+      "工具使用能力佳，可嘗試把資料處理流程標準化（例如寫固定 Script），建立可重複的分析管線。"
+    );
+
+    pushSuggestion(
+      "stats_practice",
+      "在實際負責統計分析的經驗仍有限，建議從簡單的前後比較和兩組比較開始，搭配老師或同儕指導。",
+      "已有實作案例，可進一步練習把分析過程寫成報告或簡報，強化溝通與解釋能力。",
+      "經驗豐富，可擔任研究小組中的統計窗口，並協助 PGY 共同完成小型品質改善或研究專案。"
+    );
+
+    pushSuggestion(
+      "reading",
+      "目前對期刊閱讀較陌生，建議從指導老師推薦的 1–2 篇經典文章開始，練習看摘要、方法與結果。",
+      "會閱讀期刊但對統計部分較不熟，可在閱讀時刻意標記「統計名詞」，搭配教科書或線上課程補強。",
+      "期刊閱讀與批判能力佳，建議在 Journal Club 或 PGY 教學中示範如何拆解研究設計與統計方法。"
+    );
+
+    pushSuggestion(
+      "stats_quiz",
+      "統計概念尚需加強，建議把本次 10 題當作重點清單，逐題回顧並搭配範例。",
+      "統計概念具一定基礎，可在接下來的課程中多做實際資料分析與圖表產出。",
+      "統計概念相當紮實，適合進一步學習多變量分析與樣本數估計等進階主題。"
+    );
+  }
+
+  function gradeAndVisualize() {
+    const answers = getAnswers();
+    const unanswered = Object.keys(answers).filter(id => answers[id] === null);
+    if (unanswered.length > 0) {
+      const ok = confirm(`仍有 ${unanswered.length} 題未作答，確定仍要送出並計算嗎？`);
+      if (!ok) return;
+    }
+
+    const { scores, quizCorrect, quizTotal } = computeDimensionScores(answers);
+    updateRadarChart(scores);
+    showQuestionFeedback(answers);
+
+    const name = nameInput.value.trim();
+    buildFeedbackText(scores, quizCorrect, quizTotal, name);
+    statusText.textContent = "已完成結算 · 雷達圖與文字建議已更新（可重新作答再計算）。";
+  }
+
+  function resetAll() {
+    document.querySelectorAll("input[type=radio]").forEach(i => { i.checked = false; });
+    document.querySelectorAll(".q-card").forEach(c => {
+      c.classList.remove("correct", "incorrect");
+    });
+    document.querySelectorAll(".q-exp").forEach(e => {
+      e.style.display = "none";
+      e.classList.remove("correct", "incorrect");
+      e.textContent = "";
+    });
+    statusText.textContent = "已清除作答 · 可重新開始。";
+    scoreMainText.textContent = "尚未產生結果。請先完成作答並按「送出 / 產生雷達圖」。";
+    feedbackList.innerHTML = "<li>送出後，這裡會顯示各構面的分數（0–100）與下一步學習建議。</li><li>第 11–20 題的解析會出現在各題下方，可做為課堂講解素材。</li>";
+    if (radarChart) {
+      radarChart.data.datasets[0].data = [0,0,0,0,0,0];
+      radarChart.update();
+    }
+  }
+
+  submitBtn.addEventListener("click", gradeAndVisualize);
+  resetBtn.addEventListener("click", resetAll);
+
+  function scrollToQuiz() {
+    const el = document.getElementById("quiz-section");
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - 60;
+    window.scrollTo({ top, behavior: "smooth" });
+  }
+
+  function scrollToSummary() {
+    const el = document.getElementById("summary-section");
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - 60;
+    window.scrollTo({ top, behavior: "smooth" });
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
-    renderQuiz();
-    initChart();
-    submitBtn.addEventListener("click", gradeQuiz);
+    renderAllQuestions();
+    initRadarChart();
   });
 </script>
 </body>
